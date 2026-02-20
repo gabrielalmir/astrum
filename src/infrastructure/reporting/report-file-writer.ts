@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { finished } from "node:stream/promises";
 import type { Writable } from "node:stream";
-import { queryInBatches } from "./db.js";
-import type { WorkerInput } from "./types.js";
+import type { WorkerInput } from "../../domain/report/models.js";
+import { queryInBatches } from "../database/sequelize-query-service.js";
 
 type QueryRow = Record<string, unknown>;
 
@@ -67,7 +67,7 @@ async function writeToStream(stream: Writable, chunk: string): Promise<void> {
   });
 }
 
-export async function writeXlsxWorksheet(input: WorkerInput): Promise<number> {
+async function writeXlsxWorksheet(input: WorkerInput): Promise<number> {
   fs.mkdirSync(path.dirname(input.filePath), { recursive: true });
 
   const workbook = new ExcelJS.Workbook();
@@ -144,7 +144,7 @@ export async function writeXlsxWorksheet(input: WorkerInput): Promise<number> {
   return rowCount;
 }
 
-export async function writeJsonReport(input: WorkerInput): Promise<number> {
+async function writeJsonReport(input: WorkerInput): Promise<number> {
   fs.mkdirSync(path.dirname(input.filePath), { recursive: true });
 
   const stream = fs.createWriteStream(input.filePath, { encoding: "utf8" });

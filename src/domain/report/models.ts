@@ -14,11 +14,13 @@ export interface QueryConfig {
   database: DatabaseConfig;
 }
 
-export interface ReportConfigCraftQuery {
-  report_name: string;
-  format: "xlsx" | "json";
+export type ReportFormat = "xlsx" | "json";
+
+export interface ReportConfig {
+  reportName: string;
+  format: ReportFormat;
   worksheets: Record<string, QueryConfig>;
-  chunksize: number;
+  chunkSize: number;
 }
 
 export interface WorkerInput {
@@ -33,4 +35,14 @@ export interface WorkerOutput {
   rowCount: number;
   filePath: string;
   error?: string;
+}
+
+export interface GeneratedSheet {
+  file: string;
+  rows: number;
+}
+
+export interface GeneratedReport {
+  report: string;
+  sheets: GeneratedSheet[];
 }

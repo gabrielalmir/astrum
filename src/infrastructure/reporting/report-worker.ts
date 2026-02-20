@@ -1,6 +1,6 @@
 import { parentPort, workerData } from "node:worker_threads";
-import { generateReportFile } from "./excel.js";
-import type { WorkerInput, WorkerOutput } from "./types.js";
+import type { WorkerInput, WorkerOutput } from "../../domain/report/models.js";
+import { generateReportFile } from "./report-file-writer.js";
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {

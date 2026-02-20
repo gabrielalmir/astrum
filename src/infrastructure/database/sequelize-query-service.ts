@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 import { QueryTypes, Sequelize, type Options } from "sequelize";
-import type { DatabaseConfig, DatabaseDialect } from "./types.js";
+import type { DatabaseConfig, DatabaseDialect } from "../../domain/report/models.js";
 
 type QueryRow = Record<string, unknown>;
 
@@ -68,7 +68,7 @@ function buildSequelizeInstance(config: DatabaseConfig): Sequelize {
   return new Sequelize(sequelizeOptions);
 }
 
-export function getSequelize(config: DatabaseConfig): Sequelize {
+function getSequelize(config: DatabaseConfig): Sequelize {
   const key = buildDatabaseKey(config);
   const cached = sequelizeByDatabase.get(key);
 
@@ -85,7 +85,7 @@ function removeTrailingSemicolon(query: string): string {
   return query.trim().replace(TRAILING_SEMICOLON_PATTERN, "");
 }
 
-export function paginateQuery(
+function paginateQuery(
   query: string,
   dialect: DatabaseDialect,
   offset: number,
@@ -104,7 +104,7 @@ export function paginateQuery(
   return `SELECT * FROM (${normalized}) AS paged_query LIMIT ${limit} OFFSET ${offset}`;
 }
 
-export async function fetchQueryBatch(
+async function fetchQueryBatch(
   config: DatabaseConfig,
   query: string,
   offset: number,
@@ -149,7 +149,7 @@ export async function* queryInBatches(
   }
 }
 
-export async function closeAll(): Promise<void> {
+export async function closeAllConnections(): Promise<void> {
   const closeTasks = Array.from(sequelizeByDatabase.values()).map((sequelize) =>
     sequelize.close(),
   );
